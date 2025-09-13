@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 import ChatRooms from './components/ChatRooms';
 import ChatRoom from './components/ChatRoom';
 import NameEntry from './components/NameEntry';
@@ -13,16 +14,39 @@ import AnonymousChatRoom from './components/AnonymousChatRoom';
 import AuthenticatedRandom from './components/AuthenticatedRandom';
 import AuthenticatedGroups from './components/AuthenticatedGroups';
 import AuthenticatedChatRoom from './components/AuthenticatedChatRoom';
+import HackPage from './components/HackPage.tsx';
+import HackTransition from './components/HackTransition';
+import AdminAuth from './components/AdminAuth';
+import AdminDashboard from './components/AdminDashboard';
 
-function App() {
+function AppContent() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key === 'H') {
+        event.preventDefault();
+        navigate('/hack-transition');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
   return (
-    <BrowserRouter>
+    <>
       <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/name" replace />} />
           <Route path="name" element={<NameEntry />} />
           <Route path="home" element={<Home />} />
+          <Route path="hack-transition" element={<HackTransition />} />
+          <Route path="hack-main" element={<HackPage />} />
+          <Route path="hack" element={<HackPage />} />
+          <Route path="admin-auth" element={<AdminAuth />} />
+          <Route path="admin-dashboard" element={<AdminDashboard />} />
           
           {/* Anonymous chat section */}
           <Route path="anonymous" element={<AnonymousChat />} />
@@ -41,6 +65,14 @@ function App() {
           <Route path="rooms/:id" element={<ChatRoom />} />
         </Route>
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

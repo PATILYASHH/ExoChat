@@ -14,7 +14,6 @@ export default function MaintenanceMode({ onMaintenanceEnd }: MaintenanceProps) 
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
-      const currentSecond = now.getSeconds();
 
       // Calculate target end time (12:01 AM)
       let targetTime = new Date();

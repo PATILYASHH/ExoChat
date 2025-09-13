@@ -14,6 +14,19 @@ export default function Home() {
     }
   }, [name, navigate]);
 
+  // Admin access keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key === 'Y') {
+        event.preventDefault();
+        navigate('/admin-auth');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
   // Return null if no name to prevent flash of content
   if (!name) {
     return null;

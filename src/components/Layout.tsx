@@ -1,5 +1,5 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { MessageSquare, LogOut } from 'lucide-react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { MessageSquare, LogOut, Terminal } from 'lucide-react';
 import { useNameStore } from '../store/nameStore';
 import MaintenanceMode from './MaintenanceMode';
 import MaintenanceWarning from './MaintenanceWarning';
@@ -8,7 +8,11 @@ import { useMaintenanceCheck } from '../hooks/useMaintenance';
 export default function Layout() {
   const { name, setName } = useNameStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const { inMaintenance } = useMaintenanceCheck();
+
+  const isHackPage = location.pathname === '/hack' || location.pathname === '/hack-transition' || location.pathname === '/hack-main';
+  const isAdminPage = location.pathname === '/admin-auth' || location.pathname === '/admin-dashboard';
 
   const handleSignOut = () => {
     setName('');
@@ -32,8 +36,22 @@ export default function Layout() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/home" className="flex items-center space-x-2">
-                <MessageSquare className="h-6 w-6 text-blue-500" />
-                <span className="font-semibold text-xl">ExoChat</span>
+                {isAdminPage ? (
+                  <>
+                    <Terminal className="h-6 w-6 text-red-500" />
+                    <span className="font-semibold text-xl text-red-600">Admin Panel</span>
+                  </>
+                ) : isHackPage ? (
+                  <>
+                    <Terminal className="h-6 w-6 text-green-500" />
+                    <span className="font-semibold text-xl text-green-600">Code Transfer</span>
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare className="h-6 w-6 text-blue-500" />
+                    <span className="font-semibold text-xl">ExoChat</span>
+                  </>
+                )}
               </Link>
             </div>
             <div className="flex items-center">

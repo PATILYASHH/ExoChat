@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 export interface CleanupResult {
   success: boolean;
   messagesDeleted: number;
+  hackMessagesDeleted: number;
   timestamp: string;
   error?: string;
 }
@@ -29,13 +30,42 @@ export async function triggerCleanup(): Promise<CleanupResult> {
     return {
       success: true,
       messagesDeleted: result?.messages_deleted || 0,
+      hackMessagesDeleted: result?.hack_messages_deleted || 0,
       timestamp: result?.cleanup_time || new Date().toISOString()
     };
   } catch (error: any) {
     return {
       success: false,
       messagesDeleted: 0,
+      hackMessagesDeleted: 0,
       timestamp: new Date().toISOString(),
+      error: error.message
+    };
+  }
+}
+
+/**
+ * Clear only hack page messages
+ */
+export async function clearHackMessages(): Promise<{ success: boolean; messagesDeleted: number; error?: string }> {
+  try {
+    const { data, error } = await supabase
+      .rpc('clear_hack_messages');
+
+    if (error) {
+      throw error;
+    }
+
+    const result = data?.[0];
+    
+    return {
+      success: true,
+      messagesDeleted: result?.messages_deleted || 0
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      messagesDeleted: 0,
       error: error.message
     };
   }
