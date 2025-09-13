@@ -1,16 +1,29 @@
-import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { MessageSquare, LogOut } from 'lucide-react';
 import { useNameStore } from '../store/nameStore';
+import MaintenanceMode from './MaintenanceMode';
+import MaintenanceWarning from './MaintenanceWarning';
+import { useMaintenanceCheck } from '../hooks/useMaintenance';
 
 export default function Layout() {
   const { name, setName } = useNameStore();
   const navigate = useNavigate();
+  const { inMaintenance } = useMaintenanceCheck();
 
   const handleSignOut = () => {
     setName('');
     navigate('/name');
   };
+
+  const handleMaintenanceEnd = () => {
+    // The hook will automatically update the maintenance status
+    // No need to manually set state here
+  };
+
+  // Show maintenance mode if in maintenance window
+  if (inMaintenance) {
+    return <MaintenanceMode onMaintenanceEnd={handleMaintenanceEnd} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -18,7 +31,7 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Link to="/rooms" className="flex items-center space-x-2">
+              <Link to="/home" className="flex items-center space-x-2">
                 <MessageSquare className="h-6 w-6 text-blue-500" />
                 <span className="font-semibold text-xl">ExoChat</span>
               </Link>
@@ -47,6 +60,10 @@ export default function Layout() {
           </div>
         </div>
       </nav>
+      
+      {/* Maintenance Warning */}
+      <MaintenanceWarning />
+      
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Outlet />
       </main>

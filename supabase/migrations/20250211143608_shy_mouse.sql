@@ -9,6 +9,28 @@
     - Existing messages will be preserved with a default user name
 */
 
+-- Ensure tables exist before making changes
+-- This is a safety check in case migrations run out of order
+CREATE TABLE IF NOT EXISTS chat_rooms (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  type text NOT NULL CHECK (type IN ('anonymous', 'authenticated')),
+  created_at timestamptz DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  room_id uuid REFERENCES chat_rooms(id) ON DELETE CASCADE,
+  user_id uuid REFERENCES auth.users(id),
+  anonymous_name text,
+  content text NOT NULL,
+  created_at timestamptz DEFAULT now()
+);
+
+-- Enable RLS if not already enabled
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_rooms ENABLE ROW LEVEL SECURITY;
+
 -- Remove existing RLS policies
 DROP POLICY IF EXISTS "Anyone can view messages" ON messages;
 DROP POLICY IF EXISTS "Authenticated users can insert messages in authenticated rooms" ON messages;

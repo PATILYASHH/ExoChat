@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare } from 'lucide-react';
 import { useNameStore } from '../store/nameStore';
@@ -19,7 +19,7 @@ export default function NameEntry() {
 
     setStoredName(name.trim());
     toast.success('Welcome to ExoChat!');
-    navigate('/rooms');
+    navigate('/home');
   };
 
   return (
