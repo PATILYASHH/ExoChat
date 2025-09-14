@@ -24,6 +24,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Drop existing function to avoid return type conflicts
+DROP FUNCTION IF EXISTS trigger_manual_cleanup();
+
 -- Enhanced manual trigger function that includes hack_messages
 CREATE OR REPLACE FUNCTION trigger_manual_cleanup()
 RETURNS TABLE(
@@ -48,6 +51,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Drop existing function to avoid conflicts
+DROP FUNCTION IF EXISTS clear_hack_messages();
+
 -- Function to manually clear only hack messages (for the delete button)
 CREATE OR REPLACE FUNCTION clear_hack_messages()
 RETURNS TABLE(
@@ -68,6 +74,9 @@ BEGIN
   SELECT deleted_count, NOW();
 END;
 $$ LANGUAGE plpgsql;
+
+-- Drop existing function to avoid conflicts
+DROP FUNCTION IF EXISTS get_cleanup_stats();
 
 -- Function to get cleanup statistics
 CREATE OR REPLACE FUNCTION get_cleanup_stats()

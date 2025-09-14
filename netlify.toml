@@ -5,6 +5,14 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Scheduled function for daily cleanup at midnight UTC
+[[plugins]]
+  package = "@netlify/plugin-scheduled-functions"
+
+[plugins.inputs]
+  cron = "0 0 * * *"  # Daily at midnight UTC
+  path = "/.netlify/edge-functions/daily-cleanup"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

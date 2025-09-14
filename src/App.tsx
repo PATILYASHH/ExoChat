@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
+import { startAutoCleanupMonitor } from './services/autoCleanupMonitor';
 import ChatRooms from './components/ChatRooms';
 import ChatRoom from './components/ChatRoom';
 import NameEntry from './components/NameEntry';
@@ -33,6 +34,16 @@ function AppContent() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [navigate]);
+
+  // Start auto-cleanup monitoring
+  useEffect(() => {
+    startAutoCleanupMonitor();
+    
+    // Cleanup function will be handled by the service itself
+    return () => {
+      // The service handles its own cleanup
+    };
+  }, []);
 
   return (
     <>

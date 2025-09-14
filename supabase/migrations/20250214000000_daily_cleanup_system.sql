@@ -27,6 +27,9 @@ BEGIN
   -- Delete all messages (this clears all chat history)
   DELETE FROM messages;
   
+  -- Delete all hack messages (if table exists)
+  DELETE FROM hack_messages WHERE true;
+  
   -- Log the cleanup operation
   RAISE NOTICE 'Daily cleanup completed at %', NOW();
   
@@ -80,6 +83,9 @@ BEGIN
     (EXTRACT(HOUR FROM NOW()) = 0 AND EXTRACT(MINUTE FROM NOW()) = 0)::boolean as is_cleanup;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Drop existing function if it exists (to avoid return type conflicts)
+DROP FUNCTION IF EXISTS trigger_manual_cleanup();
 
 -- Create a manual trigger function for testing cleanup
 CREATE OR REPLACE FUNCTION trigger_manual_cleanup()
