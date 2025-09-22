@@ -59,6 +59,9 @@ function AppContent() {
           <Route path="admin-auth" element={<AdminAuth />} />
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           
+          {/* Alias for admin login */}
+          <Route path="login" element={<Navigate to="/admin-auth" replace />} />
+          
           {/* Anonymous chat section */}
           <Route path="anonymous" element={<AnonymousChat />} />
           <Route path="anonymous/rooms" element={<AnonymousRooms />} />
@@ -74,6 +77,9 @@ function AppContent() {
           {/* Legacy routes for backward compatibility */}
           <Route path="rooms" element={<ChatRooms />} />
           <Route path="rooms/:id" element={<ChatRoom />} />
+          
+          {/* Catch-all route for unknown paths */}
+          <Route path="*" element={<Navigate to="/name" replace />} />
         </Route>
       </Routes>
     </>
@@ -82,7 +88,12 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <AppContent />
     </BrowserRouter>
   );

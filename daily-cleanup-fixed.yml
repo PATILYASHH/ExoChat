@@ -10,30 +10,30 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     name: Clean up chat data
-    
+
     steps:
       - name: Trigger Cleanup
         run: |
           echo "🧹 Starting daily cleanup at $(date)"
-          
+
           # Call Supabase RPC function directly
           SUPABASE_URL="${{ secrets.SUPABASE_URL }}"
           SUPABASE_KEY="${{ secrets.SUPABASE_ANON_KEY }}"
-          
+
           if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
             echo "❌ Error: Missing Supabase credentials"
             exit 1
           fi
-          
+
           echo "📡 Calling cleanup endpoint: $SUPABASE_URL/rest/v1/rpc/trigger_manual_cleanup"
-          
+
           response=$(curl -s -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $SUPABASE_KEY" \
             -H "apikey: $SUPABASE_KEY" \
             -d '{}' \
             "$SUPABASE_URL/rest/v1/rpc/trigger_manual_cleanup")
-          
+
           if [ $? -eq 0 ]; then
             echo "✅ Cleanup completed successfully"
             echo "Response: $response"
@@ -42,7 +42,7 @@ jobs:
             echo "Response: $response"
             exit 1
           fi
-          
+
           echo "✅ Daily cleanup completed at $(date)"
 
       - name: Notify on failure
