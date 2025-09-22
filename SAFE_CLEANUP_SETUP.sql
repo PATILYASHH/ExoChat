@@ -18,10 +18,10 @@ BEGIN
   SELECT COUNT(*) INTO hack_messages_count FROM hack_messages;
   
   -- Delete all regular chat messages
-  DELETE FROM messages;
+  DELETE FROM messages WHERE true;
   
   -- Delete all hack page messages
-  DELETE FROM hack_messages;
+  DELETE FROM hack_messages WHERE true;
   
   -- Log the cleanup operation with counts
   RAISE NOTICE 'Daily cleanup completed at %. Deleted % regular messages and % hack messages', 

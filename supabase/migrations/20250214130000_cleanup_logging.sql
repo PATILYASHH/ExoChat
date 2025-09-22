@@ -36,10 +36,10 @@ BEGIN
   SELECT COUNT(*) INTO hack_messages_count FROM hack_messages;
   
   -- Delete all regular chat messages
-  DELETE FROM messages;
+  DELETE FROM messages WHERE true;
   
   -- Delete all hack page messages
-  DELETE FROM hack_messages;
+  DELETE FROM hack_messages WHERE true;
   
   -- Log the cleanup operation
   INSERT INTO cleanup_log (messages_deleted, hack_messages_deleted, cleanup_type)
@@ -69,8 +69,8 @@ BEGIN
   SELECT COUNT(*) INTO hack_deleted_count FROM hack_messages;
   
   -- Perform cleanup
-  DELETE FROM messages;
-  DELETE FROM hack_messages;
+  DELETE FROM messages WHERE true;
+  DELETE FROM hack_messages WHERE true;
   
   -- Log the cleanup operation
   INSERT INTO cleanup_log (messages_deleted, hack_messages_deleted, cleanup_type)

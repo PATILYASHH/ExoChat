@@ -25,7 +25,7 @@ CREATE OR REPLACE FUNCTION daily_cleanup()
 RETURNS void AS $$
 BEGIN
   -- Delete all messages (this clears all chat history)
-  DELETE FROM messages;
+  DELETE FROM messages WHERE true;
   
   -- Delete all hack messages (if table exists)
   DELETE FROM hack_messages WHERE true;
